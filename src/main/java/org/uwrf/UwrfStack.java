@@ -7,6 +7,10 @@ import software.amazon.awscdk.services.iam.PolicyStatement;
 import software.amazon.awscdk.services.lambda.Code;
 import software.amazon.awscdk.services.lambda.Function;
 import software.amazon.awscdk.services.lambda.Runtime;
+import software.amazon.awscdk.services.s3.Bucket;
+import software.amazon.awscdk.services.s3.EventType;
+import software.amazon.awscdk.services.s3.NotificationKeyFilter;
+import software.amazon.awscdk.services.s3.notifications.LambdaDestination;
 import software.constructs.Construct;
 
 import java.util.List;
@@ -23,6 +27,7 @@ public class UwrfStack extends Stack {
         super(scope, id, props);
         this.studentName = studentName;
 
+        // Create the Lambda function
         Function videoHandler = Function.Builder.create(this, "VideoHandler")
                 .functionName(studentName + "-video-handler")
                 .runtime(Runtime.JAVA_21)
@@ -31,28 +36,28 @@ public class UwrfStack extends Stack {
                 .memorySize(512)
                 .timeout(Duration.minutes(5))
                 .description("Processes video uploads and generates quizzes")
-                // Set MOCK_BEDROCK=false when you are ready to use real Bedrock (costs money).
-                // Keep it true during development to use canned quiz responses at zero cost.
-                .environment(Map.of("MOCK_BEDROCK", "true"))
+                .environment(Map.of("MOCK_BEDROCK", "false"))
                 .build();
 
-        // TODO: Create an S3 bucket for video uploads
-        // Bucket videoBucket = Bucket.Builder.create(this, "VideoBucket")
-        //         .build();
+        // Create the S3 bucket
+        Bucket videoBucket = Bucket.Builder.create(this, "VideoBucket")
+                .bucketName(studentName + "-quiz-generator")
+                .build();
 
-        // TODO: Add S3 event notification to trigger Lambda when a video is uploaded
-        // videoBucket.addEventNotification(
-        //         EventType.OBJECT_CREATED,
-        //         new LambdaDestination(videoHandler),
-        //         NotificationKeyFilter.builder().suffix(".mp4").build()
-        // );
+        // Trigger Lambda when a .mp4 file is uploaded to the bucket
+        videoBucket.addEventNotification(
+                EventType.OBJECT_CREATED,
+                new LambdaDestination(videoHandler),
+                NotificationKeyFilter.builder()
+                        .prefix("transcripts/")
+                        .suffix(".json")
+                        .build()
+        );
 
-        // TODO: Grant Lambda permissions to:
-        // - Read from the S3 bucket
-        // - Call AWS Transcribe
-        // - Call AWS Bedrock
-        // - Write quiz results back to S3
+        // Grant Lambda permission to read and write to the S3 bucket
+        videoBucket.grantReadWrite(videoHandler);
 
+        // Grant Lambda permission to call Bedrock (AI quiz generation)
         videoHandler.addToRolePolicy(PolicyStatement.Builder.create()
                 .actions(List.of(
                         "bedrock:InvokeModel",
@@ -61,6 +66,16 @@ public class UwrfStack extends Stack {
                 .resources(List.of("*"))
                 .build());
 
+        // Grant Lambda permission to call Transcribe (speech to text)
+        videoHandler.addToRolePolicy(PolicyStatement.Builder.create()
+                .actions(List.of(
+                        "transcribe:StartTranscriptionJob",
+                        "transcribe:GetTranscriptionJob"
+                ))
+                .resources(List.of("*"))
+                .build());
+
+        // Grant Lambda permission to view AWS Marketplace subscriptions
         videoHandler.addToRolePolicy(PolicyStatement.Builder.create()
                 .actions(List.of(
                         "aws-marketplace:ViewSubscriptions",

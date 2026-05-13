@@ -19,8 +19,7 @@ import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelResponse;
  */
 public class BedrockQuizGenerator implements QuizGenerator {
 
-    private static final String MODEL_ID = "anthropic.claude-3-haiku-20240307-v1:0";
-
+    private static final String MODEL_ID = "amazon.nova-lite-v1:0";
     private final BedrockRuntimeClient bedrockClient;
     private final ObjectMapper objectMapper;
 
@@ -47,20 +46,18 @@ public class BedrockQuizGenerator implements QuizGenerator {
                 "    },\n" +
                 "    \"correctAnswer\": \"A\"\n" +
                 "  }\n" +
-                "]\n\n" +
-                "Transcript:\n" + transcript;
+                "]\n\nTranscript:\n" + transcript;
 
-        // Build the Anthropic Messages API request
+        // Nova request format
+        ObjectNode message = objectMapper.createObjectNode();
+        message.put("role", "user");
+        message.putArray("content").addObject().put("text", prompt);
+
         ObjectNode bedrockRequest = objectMapper.createObjectNode();
-        bedrockRequest.put("anthropic_version", "bedrock-2023-05-31");
-        bedrockRequest.put("max_tokens", 4096);
-        bedrockRequest.putArray("messages")
-                .addObject()
-                .put("role", "user")
-                .putArray("content")
-                .addObject()
-                .put("type", "text")
-                .put("text", prompt);
+        bedrockRequest.putArray("messages").add(message);
+        bedrockRequest.putObject("inferenceConfig")
+                .put("maxTokens", 4096)
+                .put("temperature", 0.3);
 
         InvokeModelResponse bedrockResponse = bedrockClient.invokeModel(InvokeModelRequest.builder()
                 .modelId(MODEL_ID)
@@ -69,12 +66,12 @@ public class BedrockQuizGenerator implements QuizGenerator {
                 .body(SdkBytes.fromUtf8String(objectMapper.writeValueAsString(bedrockRequest)))
                 .build());
 
-        // Parse response: content[0].text contains the quiz JSON
+        // Nova response format
         String responseBody = bedrockResponse.body().asUtf8String();
         JsonNode responseNode = objectMapper.readTree(responseBody);
-        String quizText = responseNode.get("content").get(0).get("text").asText();
+        String quizText = responseNode.get("output").get("message").get("content").get(0).get("text").asText();
 
-        // Strip markdown code fences if the model wrapped the JSON in ```json ... ```
+        // Strip markdown fences if present
         quizText = quizText.trim();
         if (quizText.startsWith("```")) {
             int firstNewline = quizText.indexOf('\n');

@@ -103,6 +103,13 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>software.amazon.awscdk:*</exclude>
+                                    <exclude>software.amazon.jsii:*</exclude>
+                                    <exclude>software.constructs:*</exclude>
+                                </excludes>
+                            </artifactSet>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.uwrf.CdkApp</mainClass>

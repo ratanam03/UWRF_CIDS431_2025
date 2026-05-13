@@ -1,0 +1,25 @@
+{
+  "jobName": "quiz-red-riding-hood",
+  "accountId": "141502744498",
+  "status": "COMPLETED",
+  "results": {
+    "transcripts": [
+      {
+        "transcript": "Once upon a time, there was a young girl who was called Little Red Riding Hood because she always wore a bright red cloak with a hood. She lived with her mother at the edge of a great forest. One day, her mother said to her, Little Red Riding Hood, your grandmother is feeling ill and I have prepared a basket of food for her. Please take it to her cottage on the other side of the forest, but do not stray from the path. Little Red Riding Hood agreed and set off through the forest carrying the basket. As she walked along the path, she met a wolf. The wolf was cunning and dangerous, but he spoke to her in a friendly manner. Good morning, little girl, he said. Where are you going on this fine day? Little Red Riding Hood did not know that the wolf was dangerous, so she told him that she was going to visit her grandmother who lived in the cottage on the other side of the forest. The wolf smiled and said he would take a different path through the forest and race her there. The wolf ran quickly through the forest and arrived at grandmother's cottage long before Little Red Riding Hood. He knocked on the door and disguised his voice, pretending to be Little Red Riding Hood. Grandmother opened the door and the wolf leaped inside and locked her in the closet. Then the wolf put on grandmother's nightgown and cap and climbed into her bed, pulling the covers up to his chin. When Little Red Riding Hood arrived at the cottage, she knocked on the door and went inside. She walked over to the bed and looked at her grandmother. Grandmother, she said, what big ears you have. All the better to hear you with, my dear, said the wolf. Grandmother, what big eyes you have. All the better to see you with, my dear. Grandmother, what big teeth you have. All the better to eat you with, my dear, cried the wolf, and he leaped out of the bed. Little Red Riding Hood screamed and ran around the cottage. Fortunately, a woodcutter who was working nearby heard her screams and rushed into the cottage. He chased the wolf away with his axe and the wolf ran off into the forest and was never seen again. The woodcutter then opened the closet door and grandmother stepped out, shaken but unharmed. Little Red Riding Hood hugged her grandmother tightly and they all sat down together to enjoy the food from the basket. From that day on, Little Red Riding Hood always remembered her mother's advice and never strayed from the path or spoke to strangers in the forest. And they all lived happily ever after."
+      }
+    ],
+    "items": [
+      { "start_time": "0.0", "end_time": "0.5", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "Once" }] },
+      { "start_time": "0.5", "end_time": "0.8", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "upon" }] },
+      { "start_time": "0.8", "end_time": "1.0", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "a" }] },
+      { "start_time": "1.0", "end_time": "1.3", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "time" }] },
+      { "type": "punctuation", "alternatives": [{ "confidence": "0.0", "content": "," }] },
+      { "start_time": "1.5", "end_time": "1.8", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "there" }] },
+      { "start_time": "1.8", "end_time": "2.0", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "was" }] },
+      { "start_time": "2.0", "end_time": "2.2", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "a" }] },
+      { "start_time": "2.2", "end_time": "2.5", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "young" }] },
+      { "start_time": "2.5", "end_time": "2.8", "type": "pronunciation", "alternatives": [{ "confidence": "0.99", "content": "girl" }] },
+      { "type": "punctuation", "alternatives": [{ "confidence": "0.0", "content": "." }] }
+    ]
+  }
+}
